@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Phishing Detection - LabsCTL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="/css/detect.css" />
+</head>
+<body>
+    <div class="phish-nav">
+        <a href="home.html" class="nav-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    </div>
+    <main class="pd-container">
+        <section class="pd-main">
+            <div class="pd-feature-box">
+                <div class="feature-icon large">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h1>Phishing Detection</h1>
+                <p>
+                    Instantly check if a website link is safe or potentially malicious using our ML-powered detection engine. Enter a URL below to see the results.
+                </p>
+                <div class="phish-checker">
+                    <input type="text" id="urlInput" placeholder="Enter website URL for checking..." />
+                    <button id="checkBtn">Check</button>
+                    <div id="resultBox"></div>
+                </div>
+            </div>
+            <div class="pd-description">
+                <h2>How Does Phishing Detection Work?</h2>
+                <p>
+                    Our tool uses a trained Machine Learning model to analyze several features of the submitted URL, such as its length, use of HTTPS, presence of suspicious keywords, and more. The model has been trained on thousands of legitimate and phishing URLs for high accuracy.
+                </p>
+                <h3>Algorithms Used:</h3>
+                <ul>
+                    <li>Random Forest Classifier</li>
+                    <li>XGBoost</li>
+                    <li>Neural Network (MLPClassifier)</li>
+                    <li>Majority Voting Ensemble</li>
+                </ul>
+                <p>
+                    By combining these algorithms through an ensemble approach, the model leverages the strengths of each for increased detection reliability.
+                </p>
+            </div>
+            <div class="pd-code">
+                <h3>Sample Model Code</h3>
+<pre><code>
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.ensemble import RandomForestClassifier, VotingClassifier
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import accuracy_score, classification_report, roc_auc_score
+from sklearn.preprocessing import StandardScaler
+from xgboost import XGBClassifier
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import urllib.parse
+
+# Load dataset (replace with actual file path)
+data = pd.read_csv(r"dataset.csv.xls")  # Update this path, e.g., 'C:/Users/ethiq/Documents/new file222.csv'
+
+# Check for duplicates
+print("Duplicate rows:", data.duplicated().sum())
+def extract_features(url):
+    parsed_url = urllib.parse.urlparse(url)
+    features = {
+        'url_length': len(url),
+        'is_https': 1 if parsed_url.scheme == 'https' else 0,
+        'contains_verify': 1 if 'verify' in url.lower() else 0,
+        'contains_login': 1 if 'login' in url.lower() else 0,
+        'num_subdomains': len(parsed_url.hostname.split('.')) - 2 if parsed_url.hostname else 0,
+        'contains_fake': 1 if 'fake' in url.lower() else 0,
+        'contains_bank': 1 if 'bank' in url.lower() else 0
+    }
+    return features
+
+# Apply feature engineering
+features_df = pd.DataFrame([extract_features(url) for url in data['url']])
+X = features_df
+y = data['label']
+
+# Handle missing values (if any)
+X = X.fillna(0)
+
+
+
+# Optionally drop leaky features to test realistic performance (uncomment to try)
+# X = X.drop(['contains_fake', 'contains_login'], axis=1, errors='ignore')
+# Split data (stratified to maintain class balance)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+
+# Scale features for MLPClassifier and ensemble
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+# --- RandomForestClassifier ---
+rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
+rf_model.fit(X_train, y_train)
+rf_pred = rf_model.predict(X_test)
+rf_accuracy = accuracy_score(y_test, rf_pred)
+rf_roc_auc = roc_auc_score(y_test, rf_pred)
+rf_cv_scores = cross_val_score(rf_model, X, y, cv=5, scoring='accuracy')
+print("\nRandomForest Results:")
+print("Test Accuracy:", rf_accuracy)
+print("Test ROC-AUC:", rf_roc_auc)
+print("5-Fold CV Accuracy:", rf_cv_scores.mean(), "±", rf_cv_scores.std())
+print("Classification Report:\n", classification_report(y_test, rf_pred))
+nn_model = MLPClassifier(hidden_layer_sizes=(64, 32), activation='relu', solver='adam',
+                         max_iter=500, random_state=42, verbose=False)
+nn_model.fit(X_train_scaled, y_train)
+nn_pred = nn_model.predict(X_test_scaled)
+nn_accuracy = accuracy_score(y_test, nn_pred)
+nn_roc_auc = roc_auc_score(y_test, nn_pred)
+nn_cv_scores = cross_val_score(nn_model, X_train_scaled, y_train, cv=5, scoring='accuracy')
+print("\nNeural Network (MLP) Results:")
+print("Test Accuracy:", nn_accuracy)
+print("Test ROC-AUC:", nn_roc_auc)
+print("5-Fold CV Accuracy:", nn_cv_scores.mean(), "±", nn_cv_scores.std())
+print("Classification Report:\n", classification_report(y_test, nn_pred))
+# --- XGBoost ---
+xgb_model = XGBClassifier(eval_metric='logloss', random_state=42)
+xgb_model.fit(X_train, y_train)
+xgb_pred = xgb_model.predict(X_test)
+xgb_accuracy = accuracy_score(y_test, xgb_pred)
+xgb_roc_auc = roc_auc_score(y_test, xgb_pred)
+xgb_cv_scores = cross_val_score(xgb_model, X, y, cv=5, scoring='accuracy')
+print("\nXGBoost Results:")
+print("Test Accuracy:", xgb_accuracy)
+print("Test ROC-AUC:", xgb_roc_auc)
+print("5-Fold CV Accuracy:", xgb_cv_scores.mean(), "±", xgb_cv_scores.std())
+print("Classification Report:\n", classification_report(y_test, xgb_pred))
+ensemble_model = VotingClassifier(
+    estimators=[
+        ('rf', RandomForestClassifier(n_estimators=100, random_state=42)),
+        ('nn', MLPClassifier(hidden_layer_sizes=(64, 32), activation='relu', solver='adam',
+                             max_iter=500, random_state=42)),
+        ('xgb', XGBClassifier(eval_metric='logloss', random_state=42))
+    ],
+    voting='hard'
+)
+ensemble_model.fit(X_train_scaled, y_train)
+ensemble_pred = ensemble_model.predict(X_test_scaled)
+ensemble_accuracy = accuracy_score(y_test, ensemble_pred)
+ensemble_roc_auc = roc_auc_score(y_test, ensemble_pred)
+ensemble_cv_scores = cross_val_score(ensemble_model, X_train_scaled, y_train, cv=5, scoring='accuracy')
+print("\nMajority Voting Ensemble Results:")
+print("Test Accuracy:", ensemble_accuracy)
+print("Test ROC-AUC:", ensemble_roc_auc)
+print("5-Fold CV Accuracy:", ensemble_cv_scores.mean(), "±", ensemble_cv_scores.std())
+print("Classification Report:\n", classification_report(y_test, ensemble_pred))
+# --- Predict Example URL ---
+def predict_url(url, ensemble_model, scaler):
+    features = extract_features(url)
+    features_df = pd.DataFrame([features])
+    features_df = features_df.fillna(0)
+    features_scaled = scaler.transform(features_df)
+    prediction = ensemble_model.predict(features_scaled)[0]
+    return "Phishing" if prediction == 1 else "Legitimate"
+
+example_url = input("enter the url : ")
+urlcheck = urllib.parse.urlparse(example_url)
+prediction = predict_url(example_url, ensemble_model, scaler)
+if(urlcheck.scheme=='https'):
+    print(f"\nExample URL: {example_url}")
+    print(f"Prediction: {prediction}")
+elif(urlcheck.scheme=='http'):
+    print(f"\nExample URL: {example_url}")
+    print(f"Prediction: {prediction}")
+    print(f"warning: This {example_url} url is not secure")
+
+
+
+# Visualize Confusion Matrices
+fig, axes = plt.subplots(2, 2, figsize=(10, 10))
+models = [
+    (rf_model, "RandomForest", X_test),
+    (nn_model, "Neural Network (MLP)", X_test_scaled),
+    (xgb_model, "XGBoost", X_test),
+    (ensemble_model, "Majority Voting", X_test_scaled)
+]
+for i, (model, name, X_data) in enumerate(models):
+    pred = model.predict(X_data)
+    cm = confusion_matrix(y_test, pred)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['Legitimate', 'Phishing'])
+    disp.plot(ax=axes[i//2, i%2])
+    axes[i//2, i%2].set_title(f"{name} Confusion Matrix")
+plt.tight_layout()
+plt.show()
+# Feature Importance (RandomForest)
+feature_importance = pd.Series(rf_model.feature_importances_, index=X.columns)
+feature_importance.sort_values(ascending=False).plot(kind='bar', title="Feature Importance (RandomForest)")
+plt.xlabel("Features")
+plt.ylabel("Importance")
+plt.show()
+
+import joblib
+
+# Save trained model and scaler
+joblib.dump(ensemble_model, "phishing_model.pkl")
+joblib.dump(scaler, "scaler.pkl")
+
+</code></pre>
+            </div>
+        </section>
+    </main>
+    <script>
+    document.getElementById("checkBtn").addEventListener("click", async () => {
+        const url = document.getElementById("urlInput").value.trim();
+        const resultBox = document.getElementById("resultBox");
+        if (!url) {
+            resultBox.textContent = "Please enter a URL.";
+            resultBox.style.color = "#f57c00";
+            return;
+        }
+        resultBox.textContent = "Checking...";
+        try {
+            const res = await fetch("/api/check-url", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ url })
+            });
+            const data = await res.json();
+            if (data.status === "Phishing") {
+                resultBox.textContent = "⚠️ " + data.warning;
+                resultBox.style.color = "#d32f2f";
+            } else if (data.status === "Legitimate") {
+                resultBox.textContent = "✅ " + data.warning;
+                resultBox.style.color = "#388e3c";
+            } else {
+                resultBox.textContent = "Unable to determine. Please try again.";
+                resultBox.style.color = "#f57c00";
+            }
+        } catch (err) {
+            resultBox.textContent = "Error contacting server.";
+            resultBox.style.color = "#f57c00";
+        }
+    });
+    </script>
+</body>
+</html>

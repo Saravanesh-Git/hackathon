@@ -1,0 +1,174 @@
+:root {
+    --primary: red;
+    --dark: #202124;
+    --light: #f8f9fa;
+    --gray: #5f6368;
+    --gradient: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    background: var(--light);
+    overflow: hidden;
+}
+
+.fullpage-split {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Left side - About */
+.about {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 60px 8vw 60px 4vw;
+    background: var(--gradient);
+}
+
+.about h2 {
+    font-size: 2.2rem;
+    margin-bottom: 28px;
+    color: var(--primary);
+}
+
+.about p {
+    font-size: 1.175rem;
+    color: var(--gray);
+    line-height: 1.7;
+    max-width: 430px;
+}
+
+/* Right side - Login */
+.login {
+    flex: 1 1 0;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 60px 4vw 60px 8vw;
+    box-shadow: 0 0 35px rgba(32,33,36,0.09);
+}
+
+.login h2 {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 32px;
+    text-align: left;
+}
+
+form {
+    width: 100%;
+    max-width: 350px;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccd;
+    border-radius: 6px;
+    outline: none;
+    font-size: 1rem;
+    background: #f9fafb;
+    margin: 0;
+}
+
+.form-group input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 1.5px var(--primary);
+}
+
+.form-links {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.96rem;
+    margin-bottom: 28px;
+}
+
+.form-links a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: text-decoration 0.2s;
+}
+
+.form-links a:hover {
+    text-decoration: underline;
+}
+
+.ok-btn {
+    display: inline-block;
+    background-color: var(--primary);
+    color: white;
+    padding: 14px 0;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.25s;
+}
+
+.ok-btn:hover {
+    background-color: #b30000;
+}
+
+/* Responsive mobile: stack vertically */
+@media (max-width: 900px) {
+    .about, .login {
+        padding: 32px 7vw;
+    }
+    form {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 650px) {
+    .fullpage-split {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+    }
+    .about, .login {
+        align-items: center;
+        justify-content: center;
+        padding: 36px 6vw;
+        min-height: 290px;
+        width: 100vw;
+        box-shadow: none;
+    }
+    .login h2, .about h2 {
+        text-align: center;
+    }
+    form {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}

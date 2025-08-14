@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Redirect requests like /about to about.html if it exists
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^([a-zA-Z0-9_-]+)/?$ $1.html [L]
+
+# OR redirect to PHP file if .html not found but .php exists
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([a-zA-Z0-9_-]+)/?$ $1.php [L]

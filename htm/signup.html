@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LabsCTL - Signup</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/signup.css">
+</head>
+<body>
+    <div class="fullpage-split">
+        
+        <!-- Left Side about section -->
+        <div class="about">
+            <h2>Join LabsCTL</h2>
+            <p>
+                LabsCTL is a virtual lab platform designed for corporate freshers and trainees. 
+                Gain hands-on training for your job role, track your assessments, and upskill 
+                with practical exercises tailored for your career growth.
+            </p>
+        </div>
+
+        <!-- Right Side signup form -->
+        <div class="signup">
+            <h2>Create Your Account</h2>
+            <form>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username">
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select id="role">
+                        <option value="">Select your role</option>
+                        <option value="Fresher">Fresher</option>
+                        <option value="Trainee">Trainee</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email ID</label>
+                    <input type="email" id="email" placeholder="Enter your email">
+                </div>
+
+                <div class="form-group">
+                    <label for="mobile">Mobile Number</label>
+                    <input type="tel" id="mobile" placeholder="Enter your mobile number">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password">
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" placeholder="Re-enter your password">
+                </div>
+
+                <div class="form-links">
+                    <a href="login">Already have an account? Login</a>
+                </div>
+
+                <button type="submit" class="ok-btn">Sign Up</button>
+            </form>
+        </div>
+    </div>
+</body>
+<script src="/js/signup.js"></script>
+</html>

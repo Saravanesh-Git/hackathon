@@ -1,0 +1,164 @@
+:root {
+    --primary: #1a73e8;
+    --danger: #d32f2f;
+    --success: #388e3c;
+    --warn: #f57c00;
+    --bg: #f8f9fa;
+    --dark: #202124;
+    --gray: #5f6368;
+    --panel: #fff;
+    --border: #e8eaed;
+}
+
+body {
+    background: var(--bg);
+    margin: 0;
+    color: var(--dark);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.pd-container {
+    max-width: 760px;
+    margin: 40px auto;
+    padding: 16px;
+}
+
+.pd-feature-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 3px 14px rgba(32,33,36,0.08);
+    padding: 32px;
+    text-align: center;
+}
+
+.feature-icon.large {
+    font-size: 52px;
+    width: 70px; height: 70px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 18px auto;
+    color: #fff;
+    background: var(--primary);
+    border-radius: 50%;
+}
+
+.pd-feature-box h1 {
+    margin: 0 0 18px 0;
+    font-size: 2.1rem;
+    letter-spacing: -0.5px;
+}
+
+.pd-feature-box p {
+    color: var(--gray);
+    font-size: 1.05rem;
+    margin-bottom: 20px;
+}
+
+.phish-checker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    max-width: 430px;
+    margin: 0 auto;
+}
+.phish-checker input {
+    width: 100%;
+    font-size: 1.02rem;
+    padding: 11px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+}
+.phish-checker button {
+    background: var(--primary);
+    color: #fff;
+    padding: 8px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.22s;
+}
+.phish-checker button:hover {
+    background: #0d62d9;
+}
+#resultBox {
+    min-height: 28px;
+    margin: 7px 0 0 0;
+    font-weight: 600;
+    font-size: 1.09rem;
+}
+
+.pd-description {
+    margin: 36px 0 0 0;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 24px;
+}
+
+.pd-description h2 {
+    margin: 0 0 10px 0;
+    color: var(--primary);
+    font-size: 1.32rem;
+}
+.pd-description h3 {
+    margin-top: 20px;
+    margin-bottom: 7px;
+    font-size: 1.11rem;
+    color: var(--dark);
+}
+.pd-description ul {
+    margin: 2px 0 14px 24px;
+    color: var(--gray);
+}
+
+.pd-code {
+    margin: 34px 0 0 0;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow-x: auto;
+    padding: 18px 18px 12px 18px;
+}
+.pd-code h3 {
+    margin-top: 0;
+    font-size: 1.05rem;
+    color: var(--dark);
+}
+.pd-code pre {
+    margin: 0;
+    background: #f8f9fa;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 0.98rem;
+}
+
+/* Simple nav button */
+.phish-nav {
+    width: 100%;
+    padding: 18px 0 0 0;
+}
+.nav-btn {
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 1.02rem;
+    padding: 7px 17px;
+    border-radius: 30px;
+    background: #eaf3fb;
+    border: 1px solid #d0e2fa;
+    transition: background 0.21s;
+}
+.nav-btn:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+@media (max-width: 600px) {
+    .pd-container { padding: 3px; }
+    .pd-feature-box { padding: 12px 3vw; }
+    .pd-description { padding: 17px 5vw; }
+    .pd-code { padding: 8px 3vw 6px 3vw; }
+}
